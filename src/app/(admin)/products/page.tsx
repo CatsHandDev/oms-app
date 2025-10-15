@@ -4,6 +4,9 @@ import { Box, Button, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import AddIcon from '@mui/icons-material/Add';
 import { Product } from '@/types';
+import CommonModal from '@/components/ui/CommonModal';
+import ProductForm from './ProductForm';
+import { useState } from 'react';
 
 // APIから取得するダミーデータ
 const dummyProducts: Product[] = [
@@ -31,11 +34,17 @@ const columns: GridColDef[] = [
 ];
 
 export default function ProductsPage() {
+  // モーダルの開閉を管理するstate
+  const [openModal, setOpenModal] = useState(false);
+
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
+
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
         <Typography variant="h5">商品管理</Typography>
-        <Button variant="contained" startIcon={<AddIcon />}>
+        <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpenModal}>
           新規商品登録
         </Button>
       </Box>
@@ -52,6 +61,14 @@ export default function ProductsPage() {
           checkboxSelection
         />
       </Box>
+      {/* 新規登録モーダル */}
+      <CommonModal
+        open={openModal}
+        onClose={handleCloseModal}
+        title="新規商品登録"
+      >
+        <ProductForm onClose={handleCloseModal} />
+      </CommonModal>
     </Box>
   );
 }
